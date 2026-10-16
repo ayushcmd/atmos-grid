@@ -1,0 +1,566 @@
+{
+  "generated_at": "2026-10-16T07:27:58.308186Z",
+  "total_indian_states_and_uts": 36,
+  "states_with_measured_ground": 4,
+  "states_satellite_only": 32,
+  "states_validated_model": 0,
+  "total_active_stations": 6,
+  "total_station_days": 1542,
+  "status_definitions": {
+    "MEASURED_GROUND": "Active CPCB CAAQMS stations with valid continuous hourly data (>=16h daily completeness rule).",
+    "SATELLITE_ONLY": "Satellite column measurements (Sentinel-5P HCHO) present, but lacking collocated ground station calibration.",
+    "VALIDATED_MODEL": "Spatially independent cross-validated ML surface-AQI predictions (deferred until nationwide dataset alignment).",
+    "INSUFFICIENT_DATA": "Neither continuous ground monitoring nor validated satellite retrieval available."
+  },
+  "state_breakdown": [
+    {
+      "state": "Andaman and Nicobar",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Andhra Pradesh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Arunachal Pradesh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Assam",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Bihar",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Chandigarh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Chhattisgarh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Dadra and Nagar Haveli",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Daman and Diu",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Delhi",
+      "coverage_status": "MEASURED_GROUND",
+      "status_label": "Measured Ground Observations",
+      "station_count": 2,
+      "valid_station_days": 617,
+      "date_start": "2024-01-01",
+      "date_end": "2024-12-31",
+      "pollutants_measured": [
+        "pm25"
+      ],
+      "mean_aqi": 135.1,
+      "data_completeness": "84.5%",
+      "scientific_caveat": "Real CPCB / State PCB monitoring network observations aggregated to 24h CPCB standards."
+    },
+    {
+      "state": "Goa",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Gujarat",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Haryana",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Himachal Pradesh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Jammu and Kashmir",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Jharkhand",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Karnataka",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Kerala",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Lakshadweep",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Madhya Pradesh",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Maharashtra",
+      "coverage_status": "MEASURED_GROUND",
+      "status_label": "Measured Ground Observations",
+      "station_count": 1,
+      "valid_station_days": 237,
+      "date_start": "2024-01-01",
+      "date_end": "2024-12-31",
+      "pollutants_measured": [
+        "no2",
+        "co"
+      ],
+      "mean_aqi": 26.1,
+      "data_completeness": "64.9%",
+      "scientific_caveat": "Real CPCB / State PCB monitoring network observations aggregated to 24h CPCB standards."
+    },
+    {
+      "state": "Manipur",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Meghalaya",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Mizoram",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Nagaland",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Orissa",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Puducherry",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Punjab",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Rajasthan",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Sikkim",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Tamil Nadu",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Telangana",
+      "coverage_status": "MEASURED_GROUND",
+      "status_label": "Measured Ground Observations",
+      "station_count": 1,
+      "valid_station_days": 168,
+      "date_start": "2024-01-29",
+      "date_end": "2024-10-26",
+      "pollutants_measured": [
+        "pm25",
+        "pm10",
+        "no2",
+        "o3"
+      ],
+      "mean_aqi": 64.1,
+      "data_completeness": "46.0%",
+      "scientific_caveat": "Real CPCB / State PCB monitoring network observations aggregated to 24h CPCB standards."
+    },
+    {
+      "state": "Tripura",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "Uttar Pradesh",
+      "coverage_status": "MEASURED_GROUND",
+      "status_label": "Measured Ground Observations",
+      "station_count": 2,
+      "valid_station_days": 497,
+      "date_start": "2024-01-01",
+      "date_end": "2024-12-31",
+      "pollutants_measured": [
+        "pm25",
+        "pm10",
+        "no2",
+        "so2",
+        "co",
+        "o3"
+      ],
+      "mean_aqi": 70.1,
+      "data_completeness": "68.1%",
+      "scientific_caveat": "Real CPCB / State PCB monitoring network observations aggregated to 24h CPCB standards."
+    },
+    {
+      "state": "Uttaranchal",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    },
+    {
+      "state": "West Bengal",
+      "coverage_status": "SATELLITE_ONLY",
+      "status_label": "Satellite Coverage (No Ground Calibration)",
+      "station_count": 0,
+      "valid_station_days": 0,
+      "date_start": null,
+      "date_end": null,
+      "pollutants_measured": [
+        "HCHO (Sentinel-5P TROPOMI)"
+      ],
+      "mean_aqi": null,
+      "data_completeness": "0% (Ground Stations Absent/Unlinked)",
+      "scientific_caveat": "Satellite observations available; surface AQI uncalibrated without collocated ground CAAQMS monitoring."
+    }
+  ]
+}

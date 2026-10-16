@@ -1,0 +1,54 @@
+{
+  "diagnostic_timestamp": "2026-10-16T14:43:05.446949Z",
+  "system_status": "OPERATIONAL",
+  "providers": {
+    "google_earth_engine": {
+      "service": "Google Earth Engine (GEE)",
+      "datasets": [
+        "COPERNICUS/S5P/OFFL/L3_HCHO (Sentinel-5P HCHO)",
+        "MODIS/061/MCD19A2_GRANULES (MODIS MAIAC AOD)"
+      ],
+      "auth_required": true,
+      "auth_method": "Google Cloud Project with Earth Engine API enabled or earthengine authenticate",
+      "status": "CREDENTIALS_MISSING",
+      "message": "GEE initialization failed: Please authorize access to your Earth Engine account by running\n\nearthengine authenticate\n\nin your command line, or ee.Authenticate() in Python, and then retry.. Run 'earthengine authenticate' or set EE_PROJECT.",
+      "is_ready": false
+    },
+    "copernicus_cds_era5": {
+      "service": "Copernicus Climate Data Store (CDS)",
+      "dataset": "reanalysis-era5-single-levels",
+      "variables": [
+        "boundary_layer_height (blh)",
+        "2m_temperature (t2m)",
+        "10m_u_component_of_wind (u10)",
+        "10m_v_component_of_wind (v10)",
+        "surface_pressure (sp)",
+        "total_precipitation (tp)"
+      ],
+      "auth_required": true,
+      "auth_method": "~/.cdsapirc configuration file with URL and API Personal Access Token",
+      "status": "CREDENTIALS_MISSING",
+      "message": "No ~/.cdsapirc found. To acquire ERA5 reanalysis, register at https://cds.climate.copernicus.eu, generate an API token, and store it in ~/.cdsapirc.",
+      "is_ready": false
+    },
+    "nasa_firms_fire": {
+      "service": "NASA FIRMS (Fire Information for Resource Management System)",
+      "datasets": [
+        "VIIRS S-NPP 375m Active Fire",
+        "MODIS C6.1 1km Active Fire"
+      ],
+      "coverage": "South Asia / India Region",
+      "auth_required": false,
+      "auth_method": "Free public CSV download (South Asia) or NASA Earthdata MAP_KEY for archive",
+      "public_url": "https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/",
+      "status": "PUBLIC_CSV_AVAILABLE",
+      "message": "No MAP_KEY set; open public regional 7-day and 24-hour CSV feeds remain accessible without authentication.",
+      "is_ready": true
+    }
+  },
+  "scientific_integration_plan": {
+    "hcho_pipeline": "Operates with Sentinel-5P Level-3 column densities + Haversine DBSCAN clustering.",
+    "aqi_pipeline": "Trained on CPCB CAAQMS ground measurements. Next stage integrates collocated AOD + BLH.",
+    "spatial_validation_requirement": "Nationwide prediction requires spatial-leave-one-station-out cross-validation across distinct physiographic zones (Gangetic Plain, Deccan Plateau, Coastal Belts) before nationwide extrapolation."
+  }
+}

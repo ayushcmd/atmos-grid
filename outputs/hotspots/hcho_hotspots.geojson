@@ -1,0 +1,68 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.205579,
+          28.608886
+        ]
+      },
+      "properties": {
+        "cluster_id": 0,
+        "pixel_count": 14,
+        "centroid_lat": 28.608886,
+        "centroid_lon": 77.205579,
+        "mean_hcho_molecules_cm2": 2.19245226483525e+16,
+        "max_hcho_molecules_cm2": 2.484853404713386e+16,
+        "min_hcho_molecules_cm2": 1.815489706626606e+16,
+        "mean_hcho_mol_m2": 0.00036406530981261426,
+        "max_hcho_mol_m2": 0.0004126196675456
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.57006,
+          24.25631
+        ]
+      },
+      "properties": {
+        "cluster_id": 1,
+        "pixel_count": 10,
+        "centroid_lat": 24.25631,
+        "centroid_lon": 82.57006,
+        "mean_hcho_molecules_cm2": 1.9476275933910628e+16,
+        "max_hcho_molecules_cm2": 2.2819693123055724e+16,
+        "min_hcho_molecules_cm2": 1.7038459264994162e+16,
+        "mean_hcho_mol_m2": 0.00032341121152792003,
+        "max_hcho_mol_m2": 0.0003789299671388
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.94978,
+          19.07722
+        ]
+      },
+      "properties": {
+        "cluster_id": 2,
+        "pixel_count": 5,
+        "centroid_lat": 19.07722,
+        "centroid_lon": 72.94978,
+        "mean_hcho_molecules_cm2": 1.8922912697178624e+16,
+        "max_hcho_molecules_cm2": 2.0720539746046776e+16,
+        "min_hcho_molecules_cm2": 1.716073584125036e+16,
+        "mean_hcho_mol_m2": 0.00031422239763896,
+        "max_hcho_mol_m2": 0.0003440727008346
+      }
+    }
+  ]
+}

@@ -19,7 +19,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -30,29 +29,47 @@ from dashboard.data_loader import (
     load_aqi_predictions,
     load_cpcb_daily_aqi,
 )
+from dashboard.theme import (
+    ACCENT_SAFFRON,
+    ACCENT_SAFFRON_DEEP,
+    BORDER_BASE,
+    STATUS_SUCCESS,
+    TEXT_MUTED,
+    TEXT_WHITE,
+    apply_plotly_theme,
+    kpi_card,
+    meta_card,
+)
 
 
 def render_aqi_analytics():
-    st.markdown("### Ground AQI Modeling & Analytics")
     st.markdown(
-        "<p style='color: #8D99AE; margin-top: -10px;'>"
-        "Supervised XGBoost regression evaluation on held-out post-monsoon observations. "
-        "Strictly validated against historical empirical baselines."
-        "</p>",
+        f"""
+        <div style="margin-bottom: 14px;">
+            <div style="font-size: 18px; font-weight: 700; color: {TEXT_WHITE};">Ground AQI Modeling & Analytics</div>
+            <div style="font-size: 13px; color: {TEXT_MUTED}; margin-top: 2px;">
+                Supervised XGBoost regression evaluation on held-out post-monsoon observations. 
+                Strictly validated against historical empirical baselines.
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
     # Scientific banner
     st.markdown(
-        """
-        <div style="background: rgba(30, 41, 59, 0.7); border-left: 4px solid #00B4D8; padding: 10px 14px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; color: #CBD5E1;">
-            <b>Scope Boundary:</b> Predictions shown are evaluated at verified ground monitoring station coordinates. 
-            These are station-level temporal forecasts, <b>not nationwide surface AQI maps</b>. 
-            Spatial extrapolation requires co-located satellite AOD and atmospheric boundary layer reanalysis.
-        </div>
-        """,
+        meta_card(
+            title="Model Scope Boundary & Geographic Constraints",
+            content=(
+                "Predictions shown are evaluated at verified ground monitoring station coordinates. "
+                "These are station-level temporal forecasts, <b>not nationwide surface AQI maps</b>. "
+                "Spatial extrapolation requires co-located satellite AOD and atmospheric boundary layer reanalysis."
+            ),
+            border_left_color=ACCENT_SAFFRON,
+        ),
         unsafe_allow_html=True,
     )
+    st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
 
     df_preds = load_aqi_predictions()
     df_daily = load_cpcb_daily_aqi()
@@ -67,50 +84,50 @@ def render_aqi_analytics():
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-label">Test MAE</div>
-                <div class="kpi-value">{m_test.get('mae', 39.59):.1f}</div>
-                <div class="kpi-sub">Baseline: {m_base.get('mae', 197.7):.1f}</div>
-            </div>
-            """,
+            kpi_card(
+                label="Test MAE",
+                value=f"{m_test.get('mae', 39.59):.1f}",
+                unit="AQI",
+                unit_color=ACCENT_SAFFRON,
+                sub=f"Baseline: {m_base.get('mae', 197.7):.1f}",
+            ),
             unsafe_allow_html=True,
         )
     with c2:
         st.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-label">Test RMSE</div>
-                <div class="kpi-value">{m_test.get('rmse', 48.67):.1f}</div>
-                <div class="kpi-sub">Baseline: {m_base.get('rmse', 224.9):.1f}</div>
-            </div>
-            """,
+            kpi_card(
+                label="Test RMSE",
+                value=f"{m_test.get('rmse', 48.67):.1f}",
+                unit="AQI",
+                unit_color=TEXT_WHITE,
+                sub=f"Baseline: {m_base.get('rmse', 224.9):.1f}",
+            ),
             unsafe_allow_html=True,
         )
     with c3:
         st.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-label">Test R² Score</div>
-                <div class="kpi-value">{m_test.get('r2', 0.795):.3f}</div>
-                <div class="kpi-sub">Train R²: {m_train.get('r2', 0.973):.3f}</div>
-            </div>
-            """,
+            kpi_card(
+                label="Test R² Score",
+                value=f"{m_test.get('r2', 0.795):.3f}",
+                unit="R²",
+                unit_color=ACCENT_SAFFRON,
+                sub=f"Train R²: {m_train.get('r2', 0.973):.3f}",
+            ),
             unsafe_allow_html=True,
         )
     with c4:
         st.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-label">Error Reduction</div>
-                <div class="kpi-value" style="color: #48E5C2;">+{mae_red:.1f}%</div>
-                <div class="kpi-sub">vs. Historical Median Strategy</div>
-            </div>
-            """,
+            kpi_card(
+                label="Error Reduction",
+                value=f"+{mae_red:.1f}%",
+                unit="gain",
+                unit_color=STATUS_SUCCESS,
+                sub="vs. Historical Median Baseline",
+            ),
             unsafe_allow_html=True,
         )
 
-    st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
 
     # --- TABBED ANALYTICS SECTIONS ---
     tab1, tab2, tab3 = st.tabs([
@@ -121,9 +138,13 @@ def render_aqi_analytics():
 
     with tab1:
         if df_preds is not None and not df_preds.empty:
-            st.markdown("#### Held-out Chronological Test Period (Oct 23 – Dec 31, 2024)")
+            st.markdown(
+                f"""
+                <div style="font-size: 14px; font-weight: 700; color: {TEXT_WHITE}; margin-bottom: 6px;">Held-out Chronological Test Period (Oct 23 – Dec 31, 2024)</div>
+                """,
+                unsafe_allow_html=True,
+            )
 
-            # Station selector if multiple
             stations = sorted(df_preds["station_name"].dropna().unique().tolist())
             selected_station = st.selectbox("Select Monitoring Station", ["All Stations"] + stations)
 
@@ -138,124 +159,141 @@ def render_aqi_analytics():
                 y=plot_df["aqi"],
                 mode="lines+markers",
                 name="Actual CPCB AQI",
-                line=dict(color="#00B4D8", width=2.5),
-                marker=dict(size=5),
+                line=dict(color=TEXT_WHITE, width=2.2),
+                marker=dict(size=4, color=TEXT_WHITE),
             ))
             fig_ts.add_trace(go.Scatter(
                 x=plot_df["date"],
                 y=plot_df["predicted_aqi"],
                 mode="lines+markers",
                 name="XGBoost Predicted AQI",
-                line=dict(color="#48E5C2", width=2, dash="dash"),
-                marker=dict(size=4),
+                line=dict(color=ACCENT_SAFFRON, width=2.2, dash="dash"),
+                marker=dict(size=4, color=ACCENT_SAFFRON),
             ))
 
-            fig_ts.update_layout(
-                template="plotly_dark",
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(15, 23, 42, 0.6)",
-                margin=dict(l=40, r=20, t=30, b=40),
+            apply_plotly_theme(
+                fig_ts,
                 height=380,
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.08)", title="Observation Date"),
-                yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.08)", title="AQI Index"),
+                xaxis_title="Observation Date",
+                yaxis_title="AQI Index",
             )
             st.plotly_chart(fig_ts, use_container_width=True)
 
             # Scatter actual vs predicted with ideal 1:1 line
             col_scat, col_desc = st.columns([1, 1])
             with col_scat:
-                fig_scat = px.scatter(
-                    plot_df,
-                    x="aqi",
-                    y="predicted_aqi",
-                    color="station_name",
-                    template="plotly_dark",
-                    labels={"aqi": "Observed AQI", "predicted_aqi": "Predicted AQI", "station_name": "Station"},
-                    title="Scatter Correlation (Ideal Line: y=x)",
-                )
+                fig_scat = go.Figure()
+                fig_scat.add_trace(go.Scatter(
+                    x=plot_df["aqi"],
+                    y=plot_df["predicted_aqi"],
+                    mode="markers",
+                    name="Evaluated Days",
+                    marker=dict(
+                        color=ACCENT_SAFFRON,
+                        size=6,
+                        opacity=0.8,
+                        line=dict(width=0.5, color=TEXT_WHITE),
+                    ),
+                    text=plot_df["station_name"],
+                    hovertemplate="Observed: %{x:.1f}<br>Predicted: %{y:.1f}<br>Station: %{text}<extra></extra>",
+                ))
                 min_v = min(plot_df["aqi"].min(), plot_df["predicted_aqi"].min())
                 max_v = max(plot_df["aqi"].max(), plot_df["predicted_aqi"].max())
                 fig_scat.add_shape(
-                    type="line", line=dict(dash="dot", color="rgba(255,255,255,0.4)"),
+                    type="line", line=dict(dash="dot", color="rgba(255,255,255,0.4)", width=1.5),
                     x0=min_v, y0=min_v, x1=max_v, y1=max_v
                 )
-                fig_scat.update_layout(
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(15, 23, 42, 0.6)",
-                    height=350,
-                    margin=dict(l=30, r=20, t=40, b=30),
+                apply_plotly_theme(
+                    fig_scat,
+                    height=340,
+                    title="Scatter Correlation (Ideal Line: y=x)",
+                    xaxis_title="Observed AQI",
+                    yaxis_title="Predicted AQI",
                 )
                 st.plotly_chart(fig_scat, use_container_width=True)
 
             with col_desc:
-                st.markdown("##### Chronological Hold-Out Methodology")
                 st.markdown(
-                    """
-                    - **Training Period:** Jan 02, 2024 to Oct 22, 2024 (468 station-days).
-                    - **Testing Period:** Oct 23, 2024 to Dec 31, 2024 (128 station-days).
-                    - **Leakage Prevention:** Split strictly by calendar timestamp. 
-                      Future observations are never exposed to feature extraction or model fitting.
-                    - **Seasonal Generalization:** The model is tested across North India's 
-                      intense winter smog and post-monsoon stubble burning episodes, 
-                      maintaining an $R^2 = 0.795$ despite high dynamic range (AQI 50 to 450+).
-                    """
+                    meta_card(
+                        title="Chronological Hold-Out Methodology",
+                        content=(
+                            "• <b>Training Period:</b> Jan 02, 2024 to Oct 22, 2024 (468 station-days).<br>"
+                            "• <b>Testing Period:</b> Oct 23, 2024 to Dec 31, 2024 (128 station-days).<br>"
+                            "• <b>Leakage Prevention:</b> Split strictly by calendar timestamp. "
+                            "Future observations are never exposed to feature extraction or model fitting.<br>"
+                            "• <b>Seasonal Generalization:</b> Tested across North India's "
+                            "winter smog and post-monsoon biomass episodes, "
+                            "maintaining R² = 0.795 across high dynamic ranges (AQI 50 to 450+)."
+                        ),
+                        border_left_color=TEXT_WHITE,
+                    ),
+                    unsafe_allow_html=True,
                 )
         else:
             st.info("Held-out prediction artifacts not found. Please run run_aqi_pipeline.py.")
 
     with tab2:
         if df_preds is not None and not df_preds.empty:
-            st.markdown("#### Residual Diagnostics (Observed − Predicted)")
+            st.markdown(
+                f"""
+                <div style="font-size: 14px; font-weight: 700; color: {TEXT_WHITE}; margin-bottom: 6px;">Residual Diagnostics (Observed − Predicted)</div>
+                """,
+                unsafe_allow_html=True,
+            )
             col_hist, col_res_ts = st.columns(2)
 
             with col_hist:
-                fig_hist = px.histogram(
-                    df_preds,
-                    x="residual",
-                    nbins=25,
-                    template="plotly_dark",
-                    title="Residual Distribution (Mean Bias: {:.2f})".format(df_preds["residual"].mean()),
-                    color_discrete_sequence=["#00B4D8"],
-                )
-                fig_hist.add_vline(x=0, line_dash="dash", line_color="#48E5C2")
-                fig_hist.update_layout(
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(15, 23, 42, 0.6)",
+                fig_hist = go.Figure()
+                fig_hist.add_trace(go.Histogram(
+                    x=df_preds["residual"],
+                    nbinsx=25,
+                    marker_color=ACCENT_SAFFRON,
+                    opacity=0.85,
+                    name="Residuals",
+                ))
+                fig_hist.add_vline(x=0, line_dash="dash", line_color=TEXT_WHITE, line_width=1.5)
+                apply_plotly_theme(
+                    fig_hist,
                     height=320,
-                    margin=dict(l=30, r=20, t=40, b=30),
+                    title=f"Residual Distribution (Mean Bias: {df_preds['residual'].mean():.2f})",
                     xaxis_title="Residual (Observed AQI − Predicted AQI)",
                     yaxis_title="Frequency",
                 )
                 st.plotly_chart(fig_hist, use_container_width=True)
 
             with col_res_ts:
-                fig_res_ts = px.scatter(
-                    df_preds,
-                    x="date",
-                    y="residual",
-                    color="station_name",
-                    template="plotly_dark",
-                    title="Residuals Across Testing Timeline",
-                    labels={"date": "Date", "residual": "Residual Error", "station_name": "Station"},
-                )
-                fig_res_ts.add_hline(y=0, line_dash="dash", line_color="rgba(255,255,255,0.4)")
-                fig_res_ts.update_layout(
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(15, 23, 42, 0.6)",
+                fig_res_ts = go.Figure()
+                fig_res_ts.add_trace(go.Scatter(
+                    x=df_preds["date"],
+                    y=df_preds["residual"],
+                    mode="markers",
+                    marker=dict(color=TEXT_WHITE, size=5, opacity=0.8),
+                    name="Residual",
+                    text=df_preds["station_name"],
+                    hovertemplate="Date: %{x}<br>Residual: %{y:.1f}<br>Station: %{text}<extra></extra>",
+                ))
+                fig_res_ts.add_hline(y=0, line_dash="dash", line_color="rgba(242, 140, 40, 0.6)", line_width=1.5)
+                apply_plotly_theme(
+                    fig_res_ts,
                     height=320,
-                    margin=dict(l=30, r=20, t=40, b=30),
+                    title="Residuals Across Testing Timeline",
+                    xaxis_title="Date",
+                    yaxis_title="Residual Error",
                 )
                 st.plotly_chart(fig_res_ts, use_container_width=True)
 
     with tab3:
-        st.markdown("#### Predictive Feature Importance")
+        st.markdown(
+            f"""
+            <div style="font-size: 14px; font-weight: 700; color: {TEXT_WHITE}; margin-bottom: 6px;">Predictive Feature Importance Breakdown</div>
+            """,
+            unsafe_allow_html=True,
+        )
         feat_imp = metrics.get("feature_importance", {})
         if feat_imp:
             df_feat = pd.DataFrame(list(feat_imp.items()), columns=["Feature", "Importance"])
             df_feat = df_feat.sort_values("Importance", ascending=True)
 
-            # Friendly feature name mapping
             feat_labels = {
                 "lag_1d": "Prior Day AQI (1-Day Lag)",
                 "month_cos": "Annual Seasonality (Month Cosine)",
@@ -271,24 +309,23 @@ def render_aqi_analytics():
             }
             df_feat["Feature_Label"] = df_feat["Feature"].apply(lambda f: feat_labels.get(f, f))
 
-            fig_bar = px.bar(
-                df_feat,
-                x="Importance",
-                y="Feature_Label",
+            fig_bar = go.Figure()
+            fig_bar.add_trace(go.Bar(
+                x=df_feat["Importance"],
+                y=df_feat["Feature_Label"],
                 orientation="h",
-                template="plotly_dark",
-                color="Importance",
-                color_continuous_scale=["#00B4D8", "#48E5C2"],
-                title="Normalized XGBoost Feature Importances",
-            )
-            fig_bar.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(15, 23, 42, 0.6)",
+                marker=dict(
+                    color=df_feat["Importance"],
+                    colorscale=[[0, ACCENT_SAFFRON_DEEP], [1, ACCENT_SAFFRON]],
+                    showscale=False,
+                ),
+                hovertemplate="%{y}: <b>%{x:.4f}</b><extra></extra>",
+            ))
+            apply_plotly_theme(
+                fig_bar,
                 height=380,
-                margin=dict(l=30, r=20, t=40, b=30),
-                coloraxis_showscale=False,
+                title="Normalized XGBoost Feature Importances",
                 xaxis_title="Relative Feature Importance",
-                yaxis_title="",
             )
             st.plotly_chart(fig_bar, use_container_width=True)
         else:

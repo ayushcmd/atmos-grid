@@ -1,0 +1,28 @@
+{
+  "observation_period": "2024-05-01 to 2024-05-31",
+  "total_pixels": 287,
+  "elevated_pixels": 29,
+  "num_clusters": 3,
+  "clustered_pixels": 29,
+  "noise_pixels": 0,
+  "clustering_parameters": {
+    "eps_km": 50.0,
+    "eps_radians": 0.007848061528802385,
+    "min_samples": 5,
+    "threshold_percentile": 90.0,
+    "threshold_value_molecules_cm2": 1.7024191038409326e+16,
+    "distance_metric": "haversine",
+    "earth_radius_km": 6371.0
+  },
+  "concentration_distribution_molecules_cm2": {
+    "min": 3683356010324143.0,
+    "max": 2.484853404713386e+16,
+    "mean": 7712396385878580.0,
+    "median": 6196041897292465.0,
+    "p75": 7743376514128166.0,
+    "p90": 1.7024191038409326e+16,
+    "p95": 2.0497666900953636e+16,
+    "p99": 2.4257742968350972e+16
+  },
+  "scientific_disclaimer": "Detected clusters represent spatial concentration patterns of elevated tropospheric formaldehyde (HCHO) column density, NOT confirmed direct emission sources. Formaldehyde is primarily a secondary photochemical oxidation product of VOC precursors. Atmospheric transport, meteorological conditions, and chemical lifetime affect column observations."
+}

@@ -75,29 +75,29 @@ AtmosGrid includes an interactive Streamlit application for exploring the availa
 
 ### National geospatial overview
 
-![AtmosGrid national geospatial overview](docs/screenshots/atmosgrid-overview.png)
+![AtmosGrid national geospatial overview](docs/atmosgrid-overview.png)
 
 The overview combines available ground-monitoring stations, HCHO cluster centroids, administrative boundaries, AQI statistics, and geographic coverage information.
 
 ### Ground AQI analytics
 
-![AtmosGrid ground AQI analytics](docs/screenshots/atmosgrid-aqi-analytics.png)
+![AtmosGrid ground AQI analytics](docs/atmosgrid-aqi-analytics.png)
 
 Explore historical observations, actual-versus-predicted AQI, residual distributions, chronological test results, and model feature importance.
 
 ### HCHO hotspot explorer
 
-![AtmosGrid HCHO hotspot explorer](docs/screenshots/atmosgrid-hcho-explorer.png)
+![AtmosGrid HCHO hotspot explorer](docs/atmosgrid-hcho-explorer.png)
 
 Inspect the three detected HCHO clusters using an interactive geographic map, cluster footprints, concentration statistics, and downloadable analytical outputs.
 
 ### Data quality and methodology
 
-![AtmosGrid data quality and methodology](docs/screenshots/atmosgrid-data-quality.png)
+![AtmosGrid data quality and methodology](docs/atmosgrid-data-quality.png)
 
 Review data provenance, daily observation completeness, state-level coverage, satellite-data readiness, mathematical formulations, and scientific limitations.
 
-*Add the corresponding screenshots to `docs/screenshots/` using the filenames above.*
+
 
 ## Project Demonstration
 
@@ -107,12 +107,10 @@ The following section is reserved for the AtmosGrid walkthrough video.
 
 <!-- Replace VIDEO_URL with a publicly accessible video URL supported by GitHub. -->
 <p align="center">
-  <a href="VIDEO_URL">
-    <img src="docs/screenshots/atmosgrid-video-thumbnail.png" alt="Watch the AtmosGrid project demonstration" width="85%"/>
+  <a href="public/videos/atmosgrid.mp4">
   </a>
 </p>
 
-The walkthrough covers the dashboard, India geospatial overview, ground AQI analytics, HCHO hotspot explorer, state-wise data coverage, and scientific methodology.
 
 For the associated web application, a file stored at `public/videos/atmosgrid.mp4` is normally accessible at `/videos/atmosgrid.mp4`. GitHub README playback requires a suitable hosted video URL; the repository-relative MP4 path alone does not guarantee inline playback.
 

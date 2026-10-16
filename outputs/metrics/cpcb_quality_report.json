@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-10-16T07:27:58.319462Z",
+  "data_source": "OpenAQ AWS S3 Archive (s3://openaq-data-archive)",
+  "provider_note": "Aggregated from official CPCB and State PCB CAAQMS continuous ambient stations.",
+  "year": 2024,
+  "stations_queried": 6,
+  "raw_data": {
+    "total_records": 70033,
+    "stations_with_data": 6,
+    "parameters_found": [
+      "co",
+      "no2",
+      "o3",
+      "pm10",
+      "pm25",
+      "so2"
+    ],
+    "date_range": {
+      "start": "2024-01-01 01:00:00",
+      "end": "2025-01-01 03:30:00"
+    },
+    "per_parameter_counts": {
+      "pm25": 28644,
+      "no2": 16046,
+      "o3": 10004,
+      "pm10": 7021,
+      "so2": 5199,
+      "co": 3119
+    }
+  },
+  "aqi_summary": {
+    "total_station_days": 1542,
+    "valid_aqi_station_days": 1519,
+    "aqi_statistics": {
+      "mean": 89.0,
+      "median": 58.0,
+      "min": 5.5,
+      "max": 485.9
+    },
+    "dominant_pollutant_distribution": {
+      "pm25": 923,
+      "o3": 318,
+      "no2": 272,
+      "pm10": 6
+    }
+  },
+  "limitations": [
+    "24-hour daily averages require >=16 valid hours per CPCB guidelines.",
+    "O3 and CO 8-hour maximums approximated from available hourly readings.",
+    "NH3 sub-index omitted due to sparse station coverage.",
+    "Predictions are spatially independent; nationwide extrapolation without regional ground validation is scientifically invalid."
+  ]
+}
