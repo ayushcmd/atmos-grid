@@ -31,6 +31,11 @@ python backend\scripts\run_hcho_pipeline.py
 python backend\scripts\run_cpcb_acquisition.py
 ```
 
+### Run Local Streamlit Dashboard (Phase 1.5)
+```bash
+.venv\Scripts\streamlit run dashboard\app.py
+```
+
 ### Run Tests
 ```bash
 python -m pytest backend\tests\ -v
