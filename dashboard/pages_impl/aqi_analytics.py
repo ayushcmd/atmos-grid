@@ -11,6 +11,14 @@ Displays:
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Ensure project root is on sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -162,7 +170,6 @@ def render_aqi_analytics():
                     x="aqi",
                     y="predicted_aqi",
                     color="station_name",
-                    trendline="ols",
                     template="plotly_dark",
                     labels={"aqi": "Observed AQI", "predicted_aqi": "Predicted AQI", "station_name": "Station"},
                     title="Scatter Correlation (Ideal Line: y=x)",

@@ -28,10 +28,14 @@ except ImportError:
     cache_data = _noop_decorator
     cache_resource = _noop_decorator
 
+import sys
+
 logger = logging.getLogger(__name__)
 
 # Project root resolution
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 # Paths to artifacts
 PATH_CPCB_DAILY = PROJECT_ROOT / "data" / "processed" / "cpcb_daily_aqi.csv"
@@ -43,11 +47,20 @@ PATH_AQI_METRICS = PROJECT_ROOT / "outputs" / "metrics" / "aqi_model_metrics.jso
 PATH_CPCB_REPORT = PROJECT_ROOT / "outputs" / "metrics" / "cpcb_quality_report.json"
 PATH_HCHO_REPORT = PROJECT_ROOT / "outputs" / "metrics" / "hcho_quality_report.json"
 PATH_AQI_PREDICTIONS = PROJECT_ROOT / "outputs" / "predictions" / "aqi_test_predictions.csv"
+PATH_STATE_COVERAGE_REPORT = PROJECT_ROOT / "outputs" / "metrics" / "state_coverage_report.json"
+PATH_STATE_COVERAGE_SUMMARY = PROJECT_ROOT / "outputs" / "metrics" / "state_coverage_summary.csv"
+PATH_INDIA_STATES_GEOJSON = PROJECT_ROOT / "data" / "processed" / "india_states_simplified.geojson"
+PATH_SATELLITE_METEO_READINESS = PROJECT_ROOT / "outputs" / "metrics" / "satellite_meteo_readiness.json"
 
 # Known station metadata mapping
 STATION_METADATA = {
-    8118: {"name": "DTU, Shahbad Daulatpur (Delhi)", "city": "Delhi", "state": "Delhi"},
-    8039: {"name": "Anand Vihar, Delhi - DPCC", "city": "Delhi", "state": "Delhi"},
+    8118: {"name": "DTU, Shahbad Daulatpur", "city": "Delhi", "state": "Delhi"},
+    8039: {"name": "Anand Vihar - DPCC", "city": "Delhi", "state": "Delhi"},
+    8117: {"name": "R.K. Puram - DPCC", "city": "Delhi", "state": "Delhi"},
+    8083: {"name": "Nehru Nagar, Kanpur", "city": "Kanpur", "state": "Uttar Pradesh"},
+    8557: {"name": "Sector-62, Noida", "city": "Noida", "state": "Uttar Pradesh"},
+    8055: {"name": "Bandra, Mumbai", "city": "Mumbai", "state": "Maharashtra"},
+    8038: {"name": "Zoo Park, Hyderabad", "city": "Hyderabad", "state": "Telangana"},
 }
 
 
@@ -182,3 +195,41 @@ def load_aqi_model() -> Optional[Any]:
     except Exception as e:
         logger.error("Error unpickling model from %s: %s", PATH_AQI_MODEL, e)
         return None
+
+
+def load_state_coverage_report() -> Optional[Dict[str, Any]]:
+    """Load comprehensive 36-state/UT coverage report."""
+    return load_json_report(PATH_STATE_COVERAGE_REPORT)
+
+
+@cache_data
+def load_state_coverage_summary() -> Optional[pd.DataFrame]:
+    """Load tabular state-wise coverage metrics."""
+    if not PATH_STATE_COVERAGE_SUMMARY.exists():
+        logger.warning("File not found: %s", PATH_STATE_COVERAGE_SUMMARY)
+        return None
+    try:
+        return pd.read_csv(PATH_STATE_COVERAGE_SUMMARY)
+    except Exception as e:
+        logger.error("Error loading %s: %s", PATH_STATE_COVERAGE_SUMMARY, e)
+        return None
+
+
+@cache_data
+def load_india_states_geojson() -> Optional[Dict[str, Any]]:
+    """Load simplified GeoJSON for all 36 Indian states and UTs."""
+    if not PATH_INDIA_STATES_GEOJSON.exists():
+        logger.warning("File not found: %s", PATH_INDIA_STATES_GEOJSON)
+        return None
+    try:
+        with open(PATH_INDIA_STATES_GEOJSON, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error("Error loading %s: %s", PATH_INDIA_STATES_GEOJSON, e)
+        return None
+
+
+def load_satellite_meteo_readiness() -> Optional[Dict[str, Any]]:
+    """Load satellite and meteorological data readiness report."""
+    return load_json_report(PATH_SATELLITE_METEO_READINESS)
+

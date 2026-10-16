@@ -3,17 +3,26 @@ Overview page for AtmosGrid Dashboard.
 
 Displays:
 - Summary KPI cards from real CPCB reports, AQI evaluation, and HCHO clustering.
-- Historical AQI time-series trend across 2024 with CPCB statutory category shading.
-- Geographic overview map of India showing CPCB monitoring sites and HCHO clusters.
-- Data coverage, observation periods, and system health status.
+- Interactive India Geospatial Overview map (Folium) with state boundaries and active stations.
+- State-wise coverage classification matrix across all 36 States/UTs.
+- Multi-station historical AQI time-series trend with statutory CPCB category bands.
+- Data coverage, observation periods, and scientific caveats.
 """
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Ensure project root is on sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import pydeck as pdk
 import streamlit as st
 
 from dashboard.data_loader import (
@@ -22,13 +31,21 @@ from dashboard.data_loader import (
     load_cpcb_report,
     load_hcho_clusters_summary,
     load_hcho_report,
+    load_india_states_geojson,
+    load_satellite_meteo_readiness,
+    load_state_coverage_report,
+    load_state_coverage_summary,
+)
+from dashboard.map_utils import (
+    build_folium_overview_map,
+    render_map_component,
 )
 
 
 def render_overview():
     st.markdown("### Environmental Intelligence Overview")
     st.markdown(
-        "<p style='color: #8D99AE; margin-top: -10px;'>"
+        "<p style='color: #94A3B8; margin-top: -10px; font-size: 14px;'>"
         "Real-time synthesis of ground monitoring observations, ML surface AQI estimation, "
         "and Sentinel-5P TROPOMI formaldehyde hotspot clustering across India."
         "</p>",
@@ -39,35 +56,39 @@ def render_overview():
     cpcb_rep = load_cpcb_report() or {}
     aqi_met = load_aqi_metrics() or {}
     hcho_rep = load_hcho_report() or {}
+    state_cov_rep = load_state_coverage_report() or {}
+    df_state_cov = load_state_coverage_summary()
     df_aqi = load_cpcb_daily_aqi()
     df_clusters = load_hcho_clusters_summary()
+    states_geojson = load_india_states_geojson()
 
     # --- TOP ROW: KPI CARDS ---
     col1, col2, col3, col4 = st.columns(4)
 
     # 1. Stations
-    stations_count = cpcb_rep.get("raw_data", {}).get("stations_with_data", 2)
+    stations_count = state_cov_rep.get("total_active_stations", 6)
+    states_count = state_cov_rep.get("states_with_measured_ground", 4)
     with col1:
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-label">CPCB Ground Stations</div>
-                <div class="kpi-value">{stations_count}</div>
-                <div class="kpi-sub">Continuous CAAQMS (Delhi NCR)</div>
+                <div class="kpi-value">{stations_count} <span style="font-size: 14px; color: #48E5C2;">sites</span></div>
+                <div class="kpi-sub">Across {states_count} Indian States/UTs (CAAQMS)</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
     # 2. Observations
-    valid_days = cpcb_rep.get("aqi_summary", {}).get("valid_aqi_station_days", 617)
+    valid_days = state_cov_rep.get("total_station_days", 1542)
     with col2:
         st.markdown(
             f"""
             <div class="kpi-card">
                 <div class="kpi-label">Valid Daily AQI Days</div>
                 <div class="kpi-value">{valid_days:,}</div>
-                <div class="kpi-sub">16h statutory CPCB completeness</div>
+                <div class="kpi-sub">≥16h statutory CPCB completeness</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -81,8 +102,8 @@ def render_overview():
             f"""
             <div class="kpi-card">
                 <div class="kpi-label">Held-out Model MAE</div>
-                <div class="kpi-value">{test_mae:.1f} <span style="font-size: 16px; color: #48E5C2;">AQI</span></div>
-                <div class="kpi-sub">R² = {test_r2:.3f} (XGBoost Regressor)</div>
+                <div class="kpi-value">{test_mae:.1f} <span style="font-size: 14px; color: #48E5C2;">AQI</span></div>
+                <div class="kpi-sub">R² = {test_r2:.3f} (Chronological Split)</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -96,146 +117,184 @@ def render_overview():
             f"""
             <div class="kpi-card">
                 <div class="kpi-label">Detected HCHO Clusters</div>
-                <div class="kpi-value">{num_clusters}</div>
-                <div class="kpi-sub">{elevated_px} elevated satellite pixels (P90)</div>
+                <div class="kpi-value">{num_clusters} <span style="font-size: 14px; color: #F72585;">cores</span></div>
+                <div class="kpi-sub">{elevated_px} elevated pixels (P90 DBSCAN)</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
 
-    # --- MAIN CONTENT: 2-COLUMN LAYOUT ---
-    left_col, right_col = st.columns([1.1, 0.9])
+    # --- MAIN VIEW TABS ---
+    tab_map, tab_trend, tab_states = st.tabs([
+        "🗺️ India Geospatial Overview",
+        "📈 Ground AQI Multi-Station Trends",
+        "📊 State-Wise Coverage Matrix (36 States/UTs)",
+    ])
 
-    with left_col:
-        st.markdown("#### Ground AQI Temporal Evolution (2024)")
+    with tab_map:
+        st.markdown("##### National Geospatial Intelligence Map")
+        st.caption(
+            "Visualizing all 36 Indian administrative territories, active CPCB CAAQMS ground stations (cyan), "
+            "and Sentinel-5P TROPOMI formaldehyde column hotspot centroids (magenta)."
+        )
+
+        folium_overview = build_folium_overview_map(
+            df_stations=df_aqi,
+            df_clusters=df_clusters,
+            states_geojson=states_geojson,
+            df_state_coverage=df_state_cov,
+        )
+        render_map_component(folium_overview, fallback_title="India Overview Map", height=540)
+
+        st.markdown(
+            """
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 12px 16px; margin-top: 14px; font-size: 12px; color: #94A3B8;">
+                <b style="color: #F8FAFC;">Scientific Governance Note:</b> 
+                Atmospheric formaldehyde clusters represent elevated tropospheric column densities derived from satellite spectroscopy, 
+                <b>not confirmed ground-level emission stacks</b>. Ground monitoring sites report 24-hour statutory averages. 
+                Nationwide surface-AQI estimation is explicitly restricted from extrapolation across uncalibrated states.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with tab_trend:
+        st.markdown("##### Multi-Station Ground AQI Time Series (2024)")
         if df_aqi is not None and not df_aqi.empty:
-            # Aggregate by date across stations for smooth trend
-            daily_mean = df_aqi.groupby("date").agg(
+            # Filter by station
+            station_options = ["All Stations"] + sorted(df_aqi["station_name"].dropna().unique().tolist())
+            selected_stn = st.selectbox("Filter by Station", station_options, index=0)
+
+            plot_aqi = df_aqi.copy()
+            if selected_stn != "All Stations":
+                plot_aqi = plot_aqi[plot_aqi["station_name"] == selected_stn]
+
+            # Aggregate by date
+            daily_stats = plot_aqi.groupby("date").agg(
                 mean_aqi=("aqi", "mean"),
                 min_aqi=("aqi", "min"),
                 max_aqi=("aqi", "max"),
+                stations_reporting=("location_id", "nunique"),
             ).reset_index()
 
             fig = go.Figure()
 
             # Statutory CPCB category background bands
-            # Good: 0-50, Satisfactory: 51-100, Moderate: 101-200, Poor: 201-300, Very Poor: 301-400, Severe: 401-500
-            fig.add_hrect(y0=0, y1=50, fillcolor="#00E400", opacity=0.08, line_width=0, annotation_text="Good", annotation_position="top left")
-            fig.add_hrect(y0=50, y1=100, fillcolor="#FFFF00", opacity=0.06, line_width=0, annotation_text="Satisfactory", annotation_position="top left")
-            fig.add_hrect(y0=100, y1=200, fillcolor="#FF7E00", opacity=0.06, line_width=0, annotation_text="Moderate", annotation_position="top left")
-            fig.add_hrect(y0=200, y1=300, fillcolor="#FF0000", opacity=0.06, line_width=0, annotation_text="Poor", annotation_position="top left")
-            fig.add_hrect(y0=300, y1=500, fillcolor="#7E0023", opacity=0.08, line_width=0, annotation_text="Very Poor / Severe", annotation_position="top left")
+            fig.add_hrect(y0=0, y1=50, fillcolor="#00E400", opacity=0.08, line_width=0, annotation_text="Good (0-50)", annotation_position="top left")
+            fig.add_hrect(y0=50, y1=100, fillcolor="#FFFF00", opacity=0.06, line_width=0, annotation_text="Satisfactory (51-100)", annotation_position="top left")
+            fig.add_hrect(y0=100, y1=200, fillcolor="#FF7E00", opacity=0.06, line_width=0, annotation_text="Moderate (101-200)", annotation_position="top left")
+            fig.add_hrect(y0=200, y1=300, fillcolor="#FF0000", opacity=0.06, line_width=0, annotation_text="Poor (201-300)", annotation_position="top left")
+            fig.add_hrect(y0=300, y1=500, fillcolor="#7E0023", opacity=0.08, line_width=0, annotation_text="Very Poor / Severe (>300)", annotation_position="top left")
 
-            # Shaded min-max spread
+            # Min-Max spread
             fig.add_trace(go.Scatter(
-                x=daily_mean["date"],
-                y=daily_mean["max_aqi"],
+                x=daily_stats["date"],
+                y=daily_stats["max_aqi"],
                 mode="lines",
                 line=dict(width=0),
                 showlegend=False,
                 hoverinfo="skip",
             ))
             fig.add_trace(go.Scatter(
-                x=daily_mean["date"],
-                y=daily_mean["min_aqi"],
+                x=daily_stats["date"],
+                y=daily_stats["min_aqi"],
                 mode="lines",
                 line=dict(width=0),
                 fill="tonexty",
                 fillcolor="rgba(72, 229, 194, 0.15)",
-                name="Station Range",
+                name="Daily Range",
             ))
 
-            # Main daily line
+            # Main mean line
             fig.add_trace(go.Scatter(
-                x=daily_mean["date"],
-                y=daily_mean["mean_aqi"],
+                x=daily_stats["date"],
+                y=daily_stats["mean_aqi"],
                 mode="lines",
-                name="Daily Mean AQI",
+                name="Mean AQI",
                 line=dict(color="#48E5C2", width=2.5),
-                hovertemplate="<b>%{x|%d %b %Y}</b><br>Mean AQI: %{y:.1f}<extra></extra>",
+                hovertemplate="<b>%{x|%d %b %Y}</b><br>AQI: %{y:.1f}<extra></extra>",
             ))
 
             fig.update_layout(
                 template="plotly_dark",
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(15, 23, 42, 0.6)",
-                margin=dict(l=40, r=20, t=20, b=40),
-                height=360,
+                margin=dict(l=40, r=20, t=30, b=40),
+                height=380,
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.08)"),
+                xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.08)", title="Date"),
                 yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.08)", title="CPCB AQI Index"),
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.info("No ground AQI observations loaded. Please run the CPCB acquisition pipeline.")
+            st.info("No ground AQI observations loaded. Please run the ground acquisition pipeline.")
 
-    with right_col:
-        st.markdown("#### Geographic Footprint over India")
-        # Build map with CPCB Stations and HCHO Clusters
-        map_data = []
+    with tab_states:
+        st.markdown("##### India Administrative Coverage Breakdown")
+        st.caption("Classification of all 36 States & Union Territories based on explicit data availability criteria.")
 
-        # Ground stations
-        if df_aqi is not None and not df_aqi.empty:
-            stations = df_aqi.groupby(["location_id", "station_name", "latitude", "longitude"]).agg(
-                avg_aqi=("aqi", "mean")
-            ).reset_index()
-            for _, r in stations.iterrows():
-                map_data.append({
-                    "name": r["station_name"],
-                    "lat": float(r["latitude"]),
-                    "lon": float(r["longitude"]),
-                    "type": "CPCB Ground Station",
-                    "info": f"Mean AQI: {r['avg_aqi']:.1f}",
-                    "color": [0, 180, 216, 220],
-                    "radius": 45000,
-                })
-
-        # HCHO Hotspot clusters
-        if df_clusters is not None and not df_clusters.empty:
-            for _, r in df_clusters.iterrows():
-                map_data.append({
-                    "name": r["region_label"],
-                    "lat": float(r["centroid_lat"]),
-                    "lon": float(r["centroid_lon"]),
-                    "type": "HCHO Hotspot Cluster",
-                    "info": f"{r['pixel_count']} pixels | Mean: {r['mean_hcho_molecules_cm2']:.2e} molec/cm²",
-                    "color": [247, 37, 133, 220],
-                    "radius": 65000,
-                })
-
-        if map_data:
-            df_map = pd.DataFrame(map_data)
-            layer = pdk.Layer(
-                "ScatterplotLayer",
-                data=df_map,
-                get_position="[lon, lat]",
-                get_color="color",
-                get_radius="radius",
-                pickable=True,
-                auto_highlight=True,
+        col_st1, col_st2, col_st3 = st.columns(3)
+        with col_st1:
+            st.markdown(
+                """
+                <div class="meta-card" style="border-left: 4px solid #48E5C2;">
+                    <b style="color: #48E5C2;">1. Measured Ground (4 States)</b><br>
+                    <span style="font-size: 12px; color: #94A3B8;">
+                        Active CPCB continuous CAAQMS stations meeting the 16h daily completeness rule.
+                    </span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        with col_st2:
+            st.markdown(
+                """
+                <div class="meta-card" style="border-left: 4px solid #00B4D8;">
+                    <b style="color: #00B4D8;">2. Satellite Only (32 States/UTs)</b><br>
+                    <span style="font-size: 12px; color: #94A3B8;">
+                        Sentinel-5P HCHO column density data available; ground AQI uncalibrated.
+                    </span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        with col_st3:
+            st.markdown(
+                """
+                <div class="meta-card" style="border-left: 4px solid #F59E0B;">
+                    <b style="color: #F59E0B;">3. Validated National Model</b><br>
+                    <span style="font-size: 12px; color: #94A3B8;">
+                        <b>Marked Unavailable / Pending</b> — Requires nationwide spatial cross-validation before claims.
+                    </span>
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
 
-            view_state = pdk.ViewState(
-                latitude=22.5,
-                longitude=79.5,
-                zoom=3.8,
-                pitch=20,
-            )
+        st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
 
-            r = pdk.Deck(
-                layers=[layer],
-                initial_view_state=view_state,
-                tooltip={"html": "<b>{name}</b><br><span style='color: #48E5C2;'>{type}</span><br>{info}"},
-                map_style="mapbox://styles/mapbox/dark-v10",
+        if df_state_cov is not None and not df_state_cov.empty:
+            display_cols = ["state", "coverage_status", "station_count", "valid_station_days", "pollutants_measured", "mean_aqi", "data_completeness"]
+            st.dataframe(
+                df_state_cov[display_cols].rename(columns={
+                    "state": "State / UT",
+                    "coverage_status": "Classification",
+                    "station_count": "Active Stations",
+                    "valid_station_days": "Valid Days",
+                    "pollutants_measured": "Parameters",
+                    "mean_aqi": "Mean AQI",
+                    "data_completeness": "Completeness",
+                }),
+                use_container_width=True,
+                height=380,
             )
-            st.pydeck_chart(r)
         else:
-            st.info("Map data unavailable.")
+            st.info("State coverage report not found. Run backend/scripts/expand_ground_data.py to generate it.")
 
     # --- BOTTOM ROW: METADATA & DATA PROVENANCE CARDS ---
-    st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     m1, m2, m3 = st.columns(3)
 
     with m1:
@@ -244,10 +303,10 @@ def render_overview():
             <div class="meta-card">
                 <div style="font-weight: 600; color: #48E5C2; margin-bottom: 6px;">Ground Truth Provenance</div>
                 <div style="font-size: 13px; color: #E2E8F0;">
-                    <b>Provider:</b> OpenAQ AWS S3 Archive<br>
-                    <b>Network:</b> CPCB & State PCB CAAQMS<br>
-                    <b>Period:</b> Jan 2024 – Dec 2024<br>
-                    <b>Resolution:</b> 24h statutory means (≥16h cutoff)
+                    <b>Provider:</b> OpenAQ AWS S3 Open Archive<br>
+                    <b>Network:</b> CPCB & State PCB CAAQMS Network<br>
+                    <b>Active States:</b> Delhi, UP, Maharashtra, Telangana<br>
+                    <b>Completeness:</b> ≥16h valid readings per station-day
                 </div>
             </div>
             """,
