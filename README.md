@@ -373,10 +373,7 @@ The project draws inspiration from the scientific objectives of BAH 2026 while b
 
 ## License
 
-AtmosGrid is licensed under the [MIT License](LICENSE).
-
-You are free to use, copy, modify, distribute, and sublicense this software,
-subject to the conditions of the license.
+AtmosGrid's original contributions controlled by the copyright holder are offered under the [Apache License, Version 2.0](LICENSE) for new distributions. See [NOTICE](NOTICE). The previous [MIT license](LICENSES/MIT-previous.txt) remains available for historical distributions and prior grants.
 
 **Note:** This license applies to the project code and accompanying materials
 owned by the project author. Third-party datasets, satellite products, libraries,
